@@ -9,14 +9,14 @@ import (
 
 type Requests struct {
 	BaseURL    string
-	Header     map[string]string
+	Headers     map[string]string
 	HttpClient *http.Client
 }
 
 func New(baseURL string) *Requests {
 	return &Requests{
 		BaseURL:    baseURL,
-		Header:     map[string]string{},
+		Headers:     map[string]string{},
 		HttpClient: &http.Client{},
 	}
 }
@@ -44,7 +44,7 @@ func (requests *Requests) doRequest(method, uri string, query map[string]string,
 	}
 	req.URL.RawQuery = q.Encode()
 
-	for k, v := range requests.Header {
+	for k, v := range requests.Headers {
 		req.Header.Add(k, v)
 	}
 

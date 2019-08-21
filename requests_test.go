@@ -19,7 +19,7 @@ func TestRequests_Get(t *testing.T) {
 
 func TestRequests_Post(t *testing.T) {
 	requests := New(baseURL)
-	requests.Header = map[string]string{
+	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
 
