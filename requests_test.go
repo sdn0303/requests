@@ -9,7 +9,7 @@ const baseURL = "http://httpbin.org"
 
 func TestRequests_Get(t *testing.T) {
 	requests := New(baseURL)
-	data, err := requests.Get("get", map[string]string{"show_env": "1"})
+	data, err := requests.Get("get", map[string]string{"show_env": "1"}, 0)
 	if err != nil {
 		t.Error(err)
 	}
@@ -32,7 +32,7 @@ func TestRequests_Post(t *testing.T) {
 		t.Error(err)
 	}
 
-	resp, err := requests.Post("post", b)
+	resp, err := requests.Post("post", b, 3)
 	if err != nil {
 		t.Error(err)
 	}
