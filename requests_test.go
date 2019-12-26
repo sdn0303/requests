@@ -14,7 +14,10 @@ func TestRequests_Get(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Logf(string(data))
+	t.Logf("Headers: %v", data.Headers)
+	t.Logf("Body: %s", string(data.Body))
+	t.Logf("StatusCode: %v", data.StatusCode)
+	t.Logf("Status: %s", data.Status)
 }
 
 func TestRequests_Post(t *testing.T) {
@@ -34,5 +37,8 @@ func TestRequests_Post(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Logf(string(resp))
+	t.Logf("Headers: %v", resp.Headers)
+	t.Logf("Body: %s", string(resp.Body))
+	t.Logf("StatusCode: %v", resp.StatusCode)
+	t.Logf("Status: %s", resp.Status)
 }
