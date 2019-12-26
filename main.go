@@ -9,19 +9,19 @@ import (
 
 type Requests struct {
 	BaseURL    string
-	Headers     map[string]string
+	Headers    map[string]string
 	HttpClient *http.Client
 }
 
 func New(baseURL string) *Requests {
 	return &Requests{
 		BaseURL:    baseURL,
-		Headers:     map[string]string{},
+		Headers:    map[string]string{},
 		HttpClient: &http.Client{},
 	}
 }
 
-func (requests *Requests) doRequest(method, uri string, query map[string]string, data []byte) (body []byte, err error) {
+func (requests *Requests) doRequest(method, uri string, query map[string]string, data []byte) (resp *http.Response, err error) {
 	baseURL, err := url.Parse(requests.BaseURL)
 	if err != nil {
 		return nil, err
@@ -48,38 +48,96 @@ func (requests *Requests) doRequest(method, uri string, query map[string]string,
 		req.Header.Add(k, v)
 	}
 
-	resp, err := requests.HttpClient.Do(req)
+	return requests.HttpClient.Do(req)
+}
+
+type ResponseData struct {
+	Headers    http.Header
+	Body       []byte
+	Status     string
+	StatusCode int
+}
+
+func (requests *Requests) Get(uri string, query map[string]string) (*ResponseData, error) {
+	if query == nil {
+		query = map[string]string{}
+	}
+
+	resp, err := requests.doRequest(http.MethodGet, uri, query, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err = ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	return body, nil
+	return &ResponseData{
+		Headers:    resp.Header,
+		Body:       b,
+		Status:     resp.Status,
+		StatusCode: resp.StatusCode,
+	}, nil
 }
 
-func (requests *Requests) Get(uri string, query map[string]string) ([]byte, error) {
-	if query == nil {
-		query = map[string]string{}
-	}
-
-	b, err := requests.doRequest(http.MethodGet, uri, query, nil)
+func (requests *Requests) Post(uri string, data []byte) (*ResponseData, error) {
+	resp, err := requests.doRequest(http.MethodPost, uri, map[string]string{}, data)
 	if err != nil {
 		return nil, err
 	}
 
-	return b, nil
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &ResponseData{
+		Headers:    resp.Header,
+		Body:       b,
+		Status:     resp.Status,
+		StatusCode: resp.StatusCode,
+	}, nil
 }
 
-func (requests *Requests) Post(uri string, data []byte) ([]byte, error) {
-	b, err := requests.doRequest(http.MethodPost, uri, map[string]string{}, data)
+func (requests *Requests) Put(uri string, data []byte) (*ResponseData, error) {
+	resp, err := requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
 	if err != nil {
 		return nil, err
 	}
 
-	return b, nil
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &ResponseData{
+		Headers:    resp.Header,
+		Body:       b,
+		Status:     resp.Status,
+		StatusCode: resp.StatusCode,
+	}, nil
+}
+
+func (requests *Requests) Delete(uri string, data []byte) (*ResponseData, error) {
+	resp, err := requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &ResponseData{
+		Headers:    resp.Header,
+		Body:       b,
+		Status:     resp.Status,
+		StatusCode: resp.StatusCode,
+	}, nil
 }
