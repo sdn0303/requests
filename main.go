@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+
+	"github.com/cenkalti/backoff"
 )
 
 type Requests struct {
@@ -22,6 +24,7 @@ func New(baseURL string) *Requests {
 }
 
 func (requests *Requests) doRequest(method, uri string, query map[string]string, data []byte) (resp *http.Response, err error) {
+
 	baseURL, err := url.Parse(requests.BaseURL)
 	if err != nil {
 		return nil, err
@@ -58,17 +61,29 @@ type ResponseData struct {
 	StatusCode int
 }
 
-func (requests *Requests) Get(uri string, query map[string]string) (*ResponseData, error) {
+func (requests *Requests) Get(uri string, query map[string]string, maxRetry uint64) (*ResponseData, error) {
+
+	var (
+		b    []byte
+		err  error
+		resp *http.Response
+	)
+
 	if query == nil {
 		query = map[string]string{}
 	}
 
-	resp, err := requests.doRequest(http.MethodGet, uri, query, nil)
-	if err != nil {
+	backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetry)
+	operation := func() error {
+		resp, err = requests.doRequest(http.MethodGet, uri, query, nil)
+		return err
+	}
+
+	if err := backoff.Retry(operation, backOff); err != nil {
 		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +97,25 @@ func (requests *Requests) Get(uri string, query map[string]string) (*ResponseDat
 	}, nil
 }
 
-func (requests *Requests) Post(uri string, data []byte) (*ResponseData, error) {
-	resp, err := requests.doRequest(http.MethodPost, uri, map[string]string{}, data)
-	if err != nil {
+func (requests *Requests) Post(uri string, data []byte, maxRetry uint64) (*ResponseData, error) {
+
+	var (
+		b    []byte
+		err  error
+		resp *http.Response
+	)
+
+	backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetry)
+	operation := func() error {
+		resp, err = requests.doRequest(http.MethodPost, uri, map[string]string{}, data)
+		return err
+	}
+
+	if err := backoff.Retry(operation, backOff); err != nil {
 		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -103,6 +130,7 @@ func (requests *Requests) Post(uri string, data []byte) (*ResponseData, error) {
 }
 
 func (requests *Requests) Put(uri string, data []byte) (*ResponseData, error) {
+
 	resp, err := requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
 	if err != nil {
 		return nil, err
@@ -123,6 +151,7 @@ func (requests *Requests) Put(uri string, data []byte) (*ResponseData, error) {
 }
 
 func (requests *Requests) Delete(uri string, data []byte) (*ResponseData, error) {
+
 	resp, err := requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
 	if err != nil {
 		return nil, err
