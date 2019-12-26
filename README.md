@@ -1,5 +1,6 @@
 # requests
-The API Request Wrapper for Golang
+The http Request CRUD Wrapper for Golang.
+
 
 ## Examples
 ### Get
