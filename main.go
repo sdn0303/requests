@@ -129,14 +129,25 @@ func (requests *Requests) Post(uri string, data []byte, maxRetry uint64) (*Respo
 	}, nil
 }
 
-func (requests *Requests) Put(uri string, data []byte) (*ResponseData, error) {
+func (requests *Requests) Put(uri string, data []byte, maxRetry uint64) (*ResponseData, error) {
 
-	resp, err := requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
-	if err != nil {
+	var (
+		b    []byte
+		err  error
+		resp *http.Response
+	)
+
+	backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetry)
+	operation := func() error {
+		resp, err = requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
+		return err
+	}
+
+	if err := backoff.Retry(operation, backOff); err != nil {
 		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -150,14 +161,61 @@ func (requests *Requests) Put(uri string, data []byte) (*ResponseData, error) {
 	}, nil
 }
 
-func (requests *Requests) Delete(uri string, data []byte) (*ResponseData, error) {
+func (requests *Requests) Patch(uri string, data []byte, maxRetry uint64) (*ResponseData, error) {
 
-	resp, err := requests.doRequest(http.MethodPut, uri, map[string]string{}, data)
-	if err != nil {
+	var (
+		b    []byte
+		err  error
+		resp *http.Response
+	)
+
+	backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetry)
+	operation := func() error {
+		resp, err = requests.doRequest(http.MethodPatch, uri, map[string]string{}, data)
+		return err
+	}
+
+	if err := backoff.Retry(operation, backOff); err != nil {
 		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &ResponseData{
+		Headers:    resp.Header,
+		Body:       b,
+		Status:     resp.Status,
+		StatusCode: resp.StatusCode,
+	}, nil
+}
+
+func (requests *Requests) Delete(uri string, query map[string]string, maxRetry uint64) (*ResponseData, error) {
+
+	var (
+		b    []byte
+		err  error
+		resp *http.Response
+	)
+
+	if query == nil {
+		query = map[string]string{}
+	}
+
+	backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetry)
+	operation := func() error {
+		resp, err = requests.doRequest(http.MethodDelete, uri, query, nil)
+		return err
+	}
+
+	if err := backoff.Retry(operation, backOff); err != nil {
+		return nil, err
+	}
+
+	b, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
