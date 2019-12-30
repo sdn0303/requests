@@ -21,7 +21,7 @@ func TestRequests_Get(t *testing.T) {
 }
 
 func TestRequests_Post(t *testing.T) {
-	requests := New(MaxRetry(1), TimeOut(60))
+	requests := New(TimeOut(60))
 	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
@@ -38,7 +38,7 @@ func TestRequests_Post(t *testing.T) {
 }
 
 func TestRequests_Put(t *testing.T) {
-	requests := New()
+	requests := New(MaxRetry(5))
 	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
