@@ -59,13 +59,6 @@ type ResponseData struct {
 	StatusCode int
 }
 
-type Resource struct {
-	HttpMethod string
-	URL        string
-	Query      map[string]string
-	Data       []byte
-}
-
 func (requests *Requests) handleRequestWithRetry(resources Resource) (*ResponseData, error) {
 
 	var (
