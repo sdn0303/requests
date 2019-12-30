@@ -9,11 +9,18 @@ type Resource struct {
 	Data       []byte
 }
 
+func queryChecker(q map[string]string) map[string]string {
+	if q == nil {
+		return map[string]string{}
+	}
+	return q
+}
+
 func (requests *Requests) Get(endpoint string, query map[string]string) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodGet,
 		URL:        endpoint,
-		Query:      query,
+		Query:      queryChecker(query),
 		Data:       nil,
 	})
 }
@@ -49,7 +56,7 @@ func (requests *Requests) Delete(endpoint string, query map[string]string) (*Res
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodDelete,
 		URL:        endpoint,
-		Query:      query,
+		Query:      queryChecker(query),
 		Data:       nil,
 	})
 }
