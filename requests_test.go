@@ -1,31 +1,32 @@
 package requests
 
 import (
+	"fmt"
 	"testing"
 )
 
 const baseURL = "http://httpbin.org"
 
 func TestRequests_Get(t *testing.T) {
-	requests := New(baseURL)
-	data, err := requests.Get("get", map[string]string{"show_env": "1"}, 3)
+	requests := New()
+	resp, err := requests.Get(fmt.Sprintf("%s/get", baseURL), map[string]string{"show_env": "1"})
 	if err != nil {
 		t.Error(err)
 	}
 
-	t.Logf("Headers: %v", data.Headers)
-	t.Logf("Body: %s", string(data.Body))
-	t.Logf("StatusCode: %v", data.StatusCode)
-	t.Logf("Status: %s", data.Status)
+	t.Logf("Headers: %v", resp.Headers)
+	t.Logf("Body: %s", string(resp.Body))
+	t.Logf("StatusCode: %v", resp.StatusCode)
+	t.Logf("Status: %s", resp.Status)
 }
 
 func TestRequests_Post(t *testing.T) {
-	requests := New(baseURL)
+	requests := New(MaxRetry(1), TimeOut(60))
 	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Post("post", []byte("testing post"), 3)
+	resp, err := requests.Post(fmt.Sprintf("%s/post", baseURL), []byte("testing post"))
 	if err != nil {
 		t.Error(err)
 	}
@@ -37,12 +38,12 @@ func TestRequests_Post(t *testing.T) {
 }
 
 func TestRequests_Put(t *testing.T) {
-	requests := New(baseURL)
+	requests := New()
 	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Put("put", []byte("testing put"), 3)
+	resp, err := requests.Put(fmt.Sprintf("%s/put", baseURL), []byte("testing put"))
 	if err != nil {
 		t.Error(err)
 	}
@@ -54,12 +55,12 @@ func TestRequests_Put(t *testing.T) {
 }
 
 func TestRequests_Patch(t *testing.T) {
-	requests := New(baseURL)
+	requests := New()
 	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Patch("patch", []byte("testing patch"), 3)
+	resp, err := requests.Patch(fmt.Sprintf("%s/patch", baseURL), []byte("testing patch"))
 	if err != nil {
 		t.Error(err)
 	}
@@ -71,12 +72,12 @@ func TestRequests_Patch(t *testing.T) {
 }
 
 func TestRequests_Delete(t *testing.T) {
-	requests := New(baseURL)
+	requests := New()
 	requests.Headers = map[string]string{
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Delete("delete", nil, 3)
+	resp, err := requests.Delete(fmt.Sprintf("%s/delete", baseURL), nil)
 	if err != nil {
 		t.Error(err)
 	}
