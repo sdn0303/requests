@@ -2,6 +2,13 @@ package requests
 
 import "net/http"
 
+type Resource struct {
+	HttpMethod string
+	URL        string
+	Query      map[string]string
+	Data       []byte
+}
+
 func (requests *Requests) Get(endpoint string, query map[string]string) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodGet,
