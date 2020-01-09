@@ -3,10 +3,6 @@ Requests
 
 The http Request Wrapper for Golang.
 
-## Description
-Requests supports CRUD(GET, POST, PUT, PATCH, DELETE)
-
-
 ## Usage
 
 Sample GET
@@ -51,7 +47,7 @@ go get github.com/sdn0303/requests
 ```
 ## Licence
 
-[MIT](https://github.com/sdn0303/requests/blob/master/LICENCE)
+[MIT](https://github.com/sdn0303/requests/blob/master/LICENSE)
 
 ## Author
 
