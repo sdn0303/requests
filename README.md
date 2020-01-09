@@ -36,7 +36,6 @@ go get github.com/sdn0303/requests
 
 ## Contribution
 
-```text
 1. Fork ([https://github.com/sdn0303/requests/fork](https://github.com/sdn0303/requests/fork))
 2. Create a feature branch
 3. Commit your changes
@@ -44,7 +43,7 @@ go get github.com/sdn0303/requests
 5. Run test suite with the `go test ./...` command and confirm that it passes
 6. Run `gofmt -s`
 7. Create new Pull Request
-```
+
 ## Licence
 
 [MIT](https://github.com/sdn0303/requests/blob/master/LICENSE)
