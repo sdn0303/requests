@@ -1,3 +1,6 @@
+// Copyright (c) 2020 Soichi David Nakahashi
+// Released under the MIT license.
+// see https://github.com/sdn0303/requests/blob/master/LICENSE
 package requests
 
 import (
