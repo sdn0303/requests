@@ -9,12 +9,14 @@ import (
 	"github.com/cenkalti/backoff"
 )
 
+// Requests struct of http client
 type Requests struct {
 	Headers    map[string]string
 	HttpClient *http.Client
 	RetryLimit uint64
 }
 
+// New initialize http client and set options
 func New(options ...Option) *Requests {
 
 	requests := &Requests{
@@ -32,6 +34,7 @@ func New(options ...Option) *Requests {
 	return requests
 }
 
+// doRequest sends a request
 func (requests *Requests) doRequest(resources Resource) (resp *http.Response, err error) {
 
 	req, err := http.NewRequest(resources.HttpMethod, resources.URL, bytes.NewBuffer(resources.Data))
@@ -52,6 +55,7 @@ func (requests *Requests) doRequest(resources Resource) (resp *http.Response, er
 	return requests.HttpClient.Do(req)
 }
 
+// ResponseData struct of response data
 type ResponseData struct {
 	Headers    http.Header
 	Body       []byte
@@ -59,6 +63,7 @@ type ResponseData struct {
 	StatusCode int
 }
 
+// handleRequestWithRetry wraps doRequest function so that retry processing can be performed
 func (requests *Requests) handleRequestWithRetry(resources Resource) (*ResponseData, error) {
 
 	var (

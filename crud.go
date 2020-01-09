@@ -2,6 +2,7 @@ package requests
 
 import "net/http"
 
+// Resource holds the resources needed to send a request
 type Resource struct {
 	HttpMethod string
 	URL        string
@@ -9,6 +10,7 @@ type Resource struct {
 	Data       []byte
 }
 
+// queryChecker returns map[string]string{} if query is nil
 func queryChecker(q map[string]string) map[string]string {
 	if q == nil {
 		return map[string]string{}
@@ -16,6 +18,7 @@ func queryChecker(q map[string]string) map[string]string {
 	return q
 }
 
+// Get
 func (requests *Requests) Get(endpoint string, query map[string]string) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodGet,
@@ -25,6 +28,7 @@ func (requests *Requests) Get(endpoint string, query map[string]string) (*Respon
 	})
 }
 
+// Post
 func (requests *Requests) Post(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodPost,
@@ -34,6 +38,7 @@ func (requests *Requests) Post(endpoint string, query map[string]string, data []
 	})
 }
 
+// Put
 func (requests *Requests) Put(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodPut,
@@ -43,6 +48,7 @@ func (requests *Requests) Put(endpoint string, query map[string]string, data []b
 	})
 }
 
+// Patch
 func (requests *Requests) Patch(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodPatch,
@@ -52,6 +58,7 @@ func (requests *Requests) Patch(endpoint string, query map[string]string, data [
 	})
 }
 
+// Delete
 func (requests *Requests) Delete(endpoint string, query map[string]string) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodDelete,
