@@ -26,7 +26,7 @@ func TestRequests_Post(t *testing.T) {
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Post(fmt.Sprintf("%s/post", baseURL), []byte("testing post"))
+	resp, err := requests.Post(fmt.Sprintf("%s/post", baseURL), nil, []byte("testing post"))
 	if err != nil {
 		t.Error(err)
 	}
@@ -43,7 +43,7 @@ func TestRequests_Put(t *testing.T) {
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Put(fmt.Sprintf("%s/put", baseURL), []byte("testing put"))
+	resp, err := requests.Put(fmt.Sprintf("%s/put", baseURL), nil, []byte("testing put"))
 	if err != nil {
 		t.Error(err)
 	}
@@ -60,7 +60,7 @@ func TestRequests_Patch(t *testing.T) {
 		"Content-Type": "application/json",
 	}
 
-	resp, err := requests.Patch(fmt.Sprintf("%s/patch", baseURL), []byte("testing patch"))
+	resp, err := requests.Patch(fmt.Sprintf("%s/patch", baseURL), nil, []byte("testing patch"))
 	if err != nil {
 		t.Error(err)
 	}

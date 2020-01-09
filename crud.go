@@ -25,29 +25,29 @@ func (requests *Requests) Get(endpoint string, query map[string]string) (*Respon
 	})
 }
 
-func (requests *Requests) Post(endpoint string, data []byte) (*ResponseData, error) {
+func (requests *Requests) Post(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodPost,
 		URL:        endpoint,
-		Query:      map[string]string{},
+		Query:      queryChecker(query),
 		Data:       data,
 	})
 }
 
-func (requests *Requests) Put(endpoint string, data []byte) (*ResponseData, error) {
+func (requests *Requests) Put(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodPut,
 		URL:        endpoint,
-		Query:      map[string]string{},
+		Query:      queryChecker(query),
 		Data:       data,
 	})
 }
 
-func (requests *Requests) Patch(endpoint string, data []byte) (*ResponseData, error) {
+func (requests *Requests) Patch(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
 	return requests.handleRequestWithRetry(Resource{
 		HttpMethod: http.MethodPatch,
 		URL:        endpoint,
-		Query:      map[string]string{},
+		Query:      queryChecker(query),
 		Data:       data,
 	})
 }
