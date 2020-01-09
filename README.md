@@ -3,6 +3,20 @@ Requests
 
 The http Request Wrapper for Golang.
 
+## Licence
+
+[MIT](https://github.com/sdn0303/requests/blob/master/LICENSE)
+
+## Author
+
+[sdn0303](https://github.com/sdn0303)
+
+## Install
+
+```bash
+go get github.com/sdn0303/requests
+```
+
 ## Usage
 
 Sample GET
@@ -28,12 +42,6 @@ func main() {
 }
 ```
 
-## Install
-
-```bash
-go get github.com/sdn0303/requests
-```
-
 ## Contribution
 
 1. Fork ([https://github.com/sdn0303/requests/fork](https://github.com/sdn0303/requests/fork))
@@ -44,10 +52,4 @@ go get github.com/sdn0303/requests
 6. Run `gofmt -s`
 7. Create new Pull Request
 
-## Licence
 
-[MIT](https://github.com/sdn0303/requests/blob/master/LICENSE)
-
-## Author
-
-[sdn0303](https://github.com/sdn0303)
