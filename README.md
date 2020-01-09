@@ -1,13 +1,16 @@
-# requests
-The http Request CRUD Wrapper for Golang.
+Requests
+====
 
-## Getting Started
-```bash
-go get github.com/sdn0303/requests
-```
+The http Request Wrapper for Golang.
+
+## Description
+Requests supports CRUD(GET, POST, PUT, PATCH, DELETE)
+
 
 ## Usage
-Sample get
+
+Sample GET
+
 ```go
 package main
 
@@ -19,15 +22,37 @@ import (
 
 func main() {
 	endpoint := "https://google.com"
-	
+
+	// Create New requests client and set timeout 15sec 
 	req := requests.New(requests.TimeOut(15))
 	resp, _ := req.Get(endpoint, map[string]string{})
-	
-	for k, v := range resp.Headers {
-		fmt.Printf("%s: %s", k, v)
-	}
+
 	fmt.Println(string(resp.Body))
 	fmt.Println(resp.Status)
-	fmt.Println(resp.StatusCode)
 }
 ```
+
+## Install
+
+```bash
+go get github.com/sdn0303/requests
+```
+
+## Contribution
+
+```text
+1. Fork ([https://github.com/sdn0303/requests/fork](https://github.com/sdn0303/requests/fork))
+2. Create a feature branch
+3. Commit your changes
+4. Rebase your local changes against the master branch
+5. Run test suite with the `go test ./...` command and confirm that it passes
+6. Run `gofmt -s`
+7. Create new Pull Request
+```
+## Licence
+
+[MIT](https://github.com/sdn0303/requests/blob/master/LICENCE)
+
+## Author
+
+[sdn0303](https://github.com/sdn0303)
