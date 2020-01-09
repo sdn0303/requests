@@ -5,6 +5,8 @@ package requests
 
 import (
 	"bytes"
+	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -25,7 +27,8 @@ func New(options ...Option) *Requests {
 	requests := &Requests{
 		Headers: map[string]string{},
 		HttpClient: &http.Client{
-			Timeout: time.Duration(30) * time.Second,
+			Transport: nil, // TODO: add keep alive settings
+			Timeout:   time.Duration(30) * time.Second,
 		},
 		RetryLimit: 0,
 	}
@@ -89,7 +92,23 @@ func (requests *Requests) handleRequestWithRetry(resources Resource) (*ResponseD
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+
+	defer func() {
+		_, err := io.Copy(ioutil.Discard, resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		resp.Body.Close()
+	}()
+
+	if resp.StatusCode < 200 || resp.StatusCode < 399 {
+		return &ResponseData{
+			Headers:    resp.Header,
+			Body:       nil,
+			Status:     resp.Status,
+			StatusCode: resp.StatusCode,
+		}, errors.New("request failed")
+	}
 
 	return &ResponseData{
 		Headers:    resp.Header,
