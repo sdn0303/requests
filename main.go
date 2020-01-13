@@ -107,7 +107,7 @@ func (requests *Requests) handleRequestWithRetry(resources Resource) (*ResponseD
 			Body:       nil,
 			Status:     resp.Status,
 			StatusCode: resp.StatusCode,
-		}, errors.New("request failed")
+		}, errors.New(resp.Status)
 	}
 
 	return &ResponseData{
