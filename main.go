@@ -5,7 +5,6 @@ package requests
 
 import (
 	"bytes"
-	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -106,15 +105,6 @@ func (requests *Requests) handleRequestWithRetry(resources *Resource) (*Response
 		}
 		resp.Body.Close()
 	}()
-
-	if resp.StatusCode > 399 {
-		return &ResponseData{
-			Headers:    resp.Header,
-			Body:       nil,
-			Status:     resp.Status,
-			StatusCode: resp.StatusCode,
-		}, errors.New(resp.Status)
-	}
 
 	return &ResponseData{
 		Headers:    resp.Header,
