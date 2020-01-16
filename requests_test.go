@@ -76,11 +76,8 @@ func TestRequests_Patch(t *testing.T) {
 
 func TestRequests_Delete(t *testing.T) {
 	requests := New()
-	requests.Headers = map[string]string{
-		"Content-Type": "application/json",
-	}
 
-	resp, err := requests.Delete(fmt.Sprintf("%s/delete", baseURL), nil)
+	resp, err := requests.Delete(fmt.Sprintf("%s/delete", baseURL), map[string]string{"show_env": "1"})
 	if err != nil {
 		t.Error(err)
 	}
