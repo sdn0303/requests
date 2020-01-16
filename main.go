@@ -85,17 +85,13 @@ func (requests *Requests) handleRequestWithRetry(resources *Resource) (*Response
 		resp *http.Response
 	)
 
-	if requests.RetryLimit == 0 {
+	backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), requests.RetryLimit)
+	operation := func() error {
 		resp, err = requests.doRequest(resources)
-	} else {
-		backOff := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), requests.RetryLimit)
-		operation := func() error {
-			resp, err = requests.doRequest(resources)
-			return err
-		}
-		if err := backoff.Retry(operation, backOff); err != nil {
-			return nil, err
-		}
+		return err
+	}
+	if err := backoff.Retry(operation, backOff); err != nil {
+		return nil, err
 	}
 
 	b, err = ioutil.ReadAll(resp.Body)
