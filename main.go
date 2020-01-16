@@ -27,8 +27,7 @@ func New(options ...Option) *Requests {
 	requests := &Requests{
 		Headers: map[string]string{},
 		HttpClient: &http.Client{
-			Transport: nil, // TODO: add keep alive settings
-			Timeout:   time.Duration(30) * time.Second,
+			Timeout: time.Duration(30) * time.Second,
 		},
 		RetryLimit: 0,
 	}
@@ -41,7 +40,7 @@ func New(options ...Option) *Requests {
 }
 
 // doRequest sends a request
-func (requests *Requests) doRequest(resources Resource) (resp *http.Response, err error) {
+func (requests *Requests) doRequest(resources Resource) (*http.Response, error) {
 
 	req, err := http.NewRequest(resources.HttpMethod, resources.URL, bytes.NewBuffer(resources.Data))
 	if err != nil {
