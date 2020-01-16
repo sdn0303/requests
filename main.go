@@ -28,8 +28,8 @@ type ResponseData struct {
 	StatusCode int
 }
 
-// Resource holds the resources needed to send a request
-type Resource struct {
+// resource holds the resources needed to send a request
+type resource struct {
 	HttpMethod string
 	URL        string
 	Query      map[string]string
@@ -55,7 +55,7 @@ func New(options ...Option) *Requests {
 }
 
 // doRequest sends a request
-func (requests *Requests) doRequest(resources *Resource) (*http.Response, error) {
+func (requests *Requests) doRequest(resources *resource) (*http.Response, error) {
 
 	req, err := http.NewRequest(resources.HttpMethod, resources.URL, bytes.NewBuffer(resources.Data))
 	if err != nil {
@@ -76,7 +76,7 @@ func (requests *Requests) doRequest(resources *Resource) (*http.Response, error)
 }
 
 // handleRequestWithRetry wraps doRequest function so that retry processing can be performed
-func (requests *Requests) handleRequestWithRetry(resources *Resource) (*ResponseData, error) {
+func (requests *Requests) handleRequestWithRetry(resources *resource) (*ResponseData, error) {
 
 	var (
 		b    []byte
@@ -124,7 +124,7 @@ func queryChecker(q map[string]string) map[string]string {
 
 // Get
 func (requests *Requests) Get(endpoint string, query map[string]string) (*ResponseData, error) {
-	return requests.handleRequestWithRetry(&Resource{
+	return requests.handleRequestWithRetry(&resource{
 		HttpMethod: http.MethodGet,
 		URL:        endpoint,
 		Query:      queryChecker(query),
@@ -134,7 +134,7 @@ func (requests *Requests) Get(endpoint string, query map[string]string) (*Respon
 
 // Post
 func (requests *Requests) Post(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
-	return requests.handleRequestWithRetry(&Resource{
+	return requests.handleRequestWithRetry(&resource{
 		HttpMethod: http.MethodPost,
 		URL:        endpoint,
 		Query:      queryChecker(query),
@@ -144,7 +144,7 @@ func (requests *Requests) Post(endpoint string, query map[string]string, data []
 
 // Put
 func (requests *Requests) Put(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
-	return requests.handleRequestWithRetry(&Resource{
+	return requests.handleRequestWithRetry(&resource{
 		HttpMethod: http.MethodPut,
 		URL:        endpoint,
 		Query:      queryChecker(query),
@@ -154,7 +154,7 @@ func (requests *Requests) Put(endpoint string, query map[string]string, data []b
 
 // Patch
 func (requests *Requests) Patch(endpoint string, query map[string]string, data []byte) (*ResponseData, error) {
-	return requests.handleRequestWithRetry(&Resource{
+	return requests.handleRequestWithRetry(&resource{
 		HttpMethod: http.MethodPatch,
 		URL:        endpoint,
 		Query:      queryChecker(query),
@@ -164,7 +164,7 @@ func (requests *Requests) Patch(endpoint string, query map[string]string, data [
 
 // Delete
 func (requests *Requests) Delete(endpoint string, query map[string]string) (*ResponseData, error) {
-	return requests.handleRequestWithRetry(&Resource{
+	return requests.handleRequestWithRetry(&resource{
 		HttpMethod: http.MethodDelete,
 		URL:        endpoint,
 		Query:      queryChecker(query),
