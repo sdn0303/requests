@@ -5,7 +5,6 @@ package requests
 
 import (
 	"bytes"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -98,13 +97,7 @@ func (requests *Requests) handleRequestWithRetry(resources *resource) (*Response
 		return nil, err
 	}
 
-	defer func() {
-		_, err := io.Copy(ioutil.Discard, resp.Body)
-		if err != nil {
-			panic(err)
-		}
-		resp.Body.Close()
-	}()
+	defer resp.Body.Close()
 
 	return &ResponseData{
 		Headers:    resp.Header,
